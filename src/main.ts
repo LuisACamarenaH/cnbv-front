@@ -10,3 +10,5 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+export const BASE_PATH = 'http://localhost:8080/app';
