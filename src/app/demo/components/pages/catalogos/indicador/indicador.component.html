@@ -1,0 +1,325 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button
+                            pButton
+                            pRipple
+                            label="New"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="openNew()"
+                        ></button>
+                        <button
+                            pButton
+                            pRipple
+                            label="Delete"
+                            icon="pi pi-trash"
+                            class="p-button-danger"
+                            (click)="deleteSelectedIndicadores()"
+                            [disabled]="
+                                !selectedIndicadores ||
+                                !selectedIndicadores.length
+                            "
+                        ></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <button
+                        pButton
+                        pRipple
+                        label="Export"
+                        icon="pi pi-upload"
+                        class="p-button-help"
+                        (click)="dt.exportCSV()"
+                    ></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table
+                #dt
+                [value]="indicadores"
+                [columns]="cols"
+                responsiveLayout="scroll"
+                [rows]="10"
+                [globalFilterFields]="[
+                    'idIndicador',
+                    'descripcion',
+                    'columnaExcel',
+                    'tipoIndicador.description'
+                ]"
+                [paginator]="true"
+                [rowsPerPageOptions]="[10, 20, 30]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedIndicadores"
+                selectionMode="multiple"
+                [rowHover]="true"
+                dataKey="idIndicador"
+            >
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
+                        <h5 class="m-0">Indicador</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="onGlobalFilter(dt, $event)"
+                                placeholder="Search..."
+                                class="w-full sm:w-auto"
+                            />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            Id <p-sortIcon field="idIndicador"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="descripcion">
+                            Descripcion
+                            <p-sortIcon field="descripcion"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="columnaExcel">
+                            Columna xls
+                            <p-sortIcon field="columnaExcel"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tipoIndicador">
+                            Tipo indicador
+                            <p-sortIcon field="tipoIndicador"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-indicador>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox
+                                [value]="indicador"
+                            ></p-tableCheckbox>
+                        </td>
+                        <td style="width: 10%; min-width: 10rem">
+                            <span class="p-column-title">Id</span>
+                            {{ indicador.idIndicador }}
+                        </td>
+                        <td style="width: 30%; min-width: 10rem">
+                            <span class="p-column-title">Descripcion</span>
+                            {{ indicador.descripcion }}
+                        </td>
+                        <td style="width: 20%; min-width: 10rem">
+                            <span class="p-column-title">Columna xls</span>
+                            {{ indicador.columnaExcel }}
+                        </td>
+                        <td style="width: 20%; min-width: 10rem">
+                            <span class="p-column-title">Tipo indicador</span>
+                            {{ indicador.tipoIndicador.description }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editIndicador(indicador)"
+                                ></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning"
+                                    (click)="deleteIndicador(indicador)"
+                                ></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog
+            [(visible)]="indicadorDialog"
+            [style]="{ width: '500px' }"
+            [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+            header="Detalle Indicador"
+            [modal]="true"
+            class="p-fluid"
+        >
+            <ng-template pTemplate="content">
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="id">Id</label>
+                        <input
+                            type="number"
+                            pInputText
+                            id="id"
+                            [disabled]="true"
+                            [(ngModel)]="indicador.idIndicador"
+                        />
+                    </div>
+                    <div class="field col">
+                        <label for="tipoIndicador">Tipo indicador</label>
+                        <p-dropdown
+                            [(ngModel)]="indicador.tipoIndicador"
+                            inputId="tipoIndicador"
+                            optionLabel="description"
+                            [options]="tiposIndicadores"
+                            placeholder="Selecciona"
+                            (onChange)="onChange($event)">
+                            <ng-template pTemplate="selectedItem">
+                                <span *ngIf="indicador.tipoIndicador">
+                                    {{
+                                        indicador.tipoIndicador.description
+                                    }}</span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                                <span>{{ option.description }}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="description">Descripcion</label>
+                    <textarea
+                        id="description"
+                        pInputTextarea
+                        [(ngModel)]="indicador.descripcion"
+                        required
+                        rows="3"
+                        cols="10"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty':
+                                submitted && !indicador.descripcion
+                        }"
+                    ></textarea>
+                    <small
+                        class="ng-dirty ng-invalid"
+                        *ngIf="submitted && !indicador.descripcion"
+                        >Descripción es requerida.</small
+                    >
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="columnaExcel">Columna xls</label>
+                        <input
+                            type="text"
+                            pInputText
+                            id="columnaExcel"
+                            [(ngModel)]="indicador.columnaExcel"
+                            required
+                            autofocus
+                        />
+                        <small
+                            class="p-error"
+                            *ngIf="indicador && !indicador.columnaExcel"
+                        >
+                            Columna Excel es requireda.
+                        </small>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    label="Cancel"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    (click)="hideDialog()"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Save"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    (click)="saveIndicador()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog
+            [(visible)]="deleteIndicadorDialog"
+            header="Confirm"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="indicador"
+                    >Estas seguro que quieres eliminar
+                    <b>{{ indicador.descripcion }}</b
+                    >?</span
+                >
+            </div>
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteIndicadorDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDelete()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog
+            [(visible)]="deleteIndicadoresDialog"
+            header="Confirm"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span
+                    >Estas seguro que quieres eliminar los indicadores
+                    seleccionados?</span
+                >
+            </div>
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteIndicadoresDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDeleteSelected()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

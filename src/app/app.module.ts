@@ -12,6 +12,7 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { TipoIndicadorService } from './demo/components/pages/catalogos/tipoIndicador/tipoIndicador.service';
+import { IndicadorService } from './demo/components/pages/catalogos/indicador/indicador.service';
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
@@ -19,7 +20,7 @@ import { TipoIndicadorService } from './demo/components/pages/catalogos/tipoIndi
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, TipoIndicadorService
+        PhotoService, ProductService, TipoIndicadorService, IndicadorService
     ],
     bootstrap: [AppComponent],
 })
