@@ -1,0 +1,20 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Carga masiva - historico curvas</h5>
+            <p-fileUpload
+                chooseLabel="Seleccionar archivo"
+                uploadLabel="cargar archivo"
+                cancelLabel="Cancelar carga"
+                (uploadHandler)="uploadHandler()"
+                name="demo[]"
+                customUpload="true"
+                (onClear)="onClear()"
+                (onSelect)="onSelect($event)"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            >
+            </p-fileUpload>
+        </div>
+    </div>
+</div>
+<p-toast />
