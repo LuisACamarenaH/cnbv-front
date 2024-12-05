@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ResultsDueComponent } from './results-due/results-due.component';
+import { ResultHistoryComponent } from './result-history/result-history.component';
 
 @NgModule({
     imports: [
@@ -50,6 +52,14 @@ import { RouterModule } from '@angular/router';
                     import('./debt-upload/debt-upload.module').then(
                         (m) => m.DebtUploadModule
                     ),
+            },
+            {
+                path: 'results-due',
+                component: ResultsDueComponent,
+            },
+            {
+                path: 'results-history',
+                component: ResultHistoryComponent,
             },
             { path: '**', redirectTo: '/notfound' },
         ]),

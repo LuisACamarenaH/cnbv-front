@@ -1,0 +1,58 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Consulta historico</h5>
+            <div class="row flex">
+                <div class="col-6">
+                    <p-calendar
+                        class="w-full"
+                        [(ngModel)]="date"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        inputId="icondisplay"
+                        [maxDate]="max"
+                    />
+                </div>
+                <div class="col-4">
+                    <p-button
+                        [disabled]="!date"
+                        (click)="getResults()"
+                        label="Consultar"
+                    />
+                </div>
+            </div>
+            <p-table
+                #dt2
+                [globalFilterFields]="[
+                    'name',
+                    'country.name',
+                    'representative.name',
+                    'status'
+                ]"
+                [columns]="settings"
+                [value]="dataResult"
+            >
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{ col.title }}
+                            <!-- <p-columnFilter
+                              type="text"
+                              field="col.field"
+                              placeholder="Search by name"
+                              ariaLabel="Filter Name"
+                          /> -->
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns">
+                            {{ rowData[col.field] }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

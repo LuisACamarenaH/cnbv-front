@@ -1,0 +1,11 @@
+nb-card-body {
+    margin: 0 16px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+::ng-deep p-calendar {
+    span {
+        width: 100%;
+    }
+}

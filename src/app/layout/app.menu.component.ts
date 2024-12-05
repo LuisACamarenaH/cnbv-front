@@ -54,6 +54,19 @@ export class AppMenuComponent implements OnInit {
                 ],
             },
             {
+                label: 'Consultas',
+                items: [
+                    {
+                        label: 'Consulta de deuda',
+                        routerLink: ['pages/results-due'],
+                    },
+                    {
+                        label: 'Consulta de historico',
+                        routerLink: ['pages/results-history'],
+                    },
+                ],
+            },
+            {
                 label: 'UI Components',
                 items: [
                     {
